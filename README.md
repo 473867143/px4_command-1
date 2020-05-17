@@ -1,56 +1,68 @@
-# px4_command
+# px4_command 功能包
 Send command to PX4 using Mavros package
 
 
-# Installation
+# 功能包下载编译以及环境变量设置
 
-1. Install the mavros packgae by Binary installation
-   
-    Please ref to: https://github.com/mavlink/mavros
+1. 创建一个名为“off_ws”工作区间
+  
+    `mkdir -p ~/off_ws/src`
+  
+    `cd ~/off_ws/src`
+  
     
-    If you has install the mavros package by source code. Plaese deleat it firstly.
-   
-2. Create a new ros space called "px4_ws" in your home folder
-  
-    `mkdir -p ~/px4_ws/src`
-  
-    `cd ~/px4_ws/src`
-  
-    `catkin_init_workspace`
-    
-    Please source manually, open a new terminal
+    手动source，home下打开一个终端
     
     `gedit .bashrc`  
     
-    Add the path `source /home/$(your computer name)/px4_ws/devel/setup.bash` in the end of the bashrc.txt file
+    在底下添加路径 `source /home/$(your computer name)/off_ws/devel/setup.bash` 
 
-3. Git clone the px4_command package
+2. 下载 px4_command 功能包
     
     `cd ~/px4_ws/src`
 	
-    download from gitlab repository
+    从github上面下载
     
-    `git clone http://gitlab.amovauto.com/amovlab/px4_command`
+    `git clone https://github.com/amov-lab/px4_command.git`
     
-    download from github repository
+    添加远程库
 
-    `git clone https://github.com/potato77/px4_command`
+    `git remote add origin_amov_e https://github.com/473867143/px4_command-1.git`
+
+    查看远程库是否添加正确
+
+    `git remote -v`
+
+    抓取远程分之
+
+    `git fetch origin_amov_e`
+
+    切换到amov_e分之
+
+    `git checkout origin_amov_e/amov_e`
+ 
+    编译
     
     `cd ..`
     
     `catkin_make`
-    
-# Coordinate frames
 
-   Here we are using **ENU** frames.
+3.  添加px4 Firmware环境变量
+    home下打开.bashrc文件，添加如下格式的路径变量
 
-  >  MAVROS does translate Aerospace NED frames, used in FCUs to ROS ENU frames and vice-versa. For translate airframe related data we simply apply rotation 180° about ROLL (X) axis. For local we apply 180° about ROLL (X) and 90° about YAW (Z) axes
+    `source ~/$(your path)/Firmware/Tools/setup_gazebo.bash ~/$(your path)/Firmware ~/$(your path)/Firmware/build/px4_sitl_default`
+    `export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:~/$(your path)/Firmware`
+    `export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:~/$(your path)/Firmware/Tools/sitl_gazebo`
 
-# Branch
+# 仿真运行
 
-fsc_lab branch is used for fsc_lab quadrotor experiment.
-    
-Use this command to switch to fsc_lab branch
+进入到
+    `cd ~/off_ws/src/px4_command/sh/sh_for_simulation`
 
-`git checkout fsc_lab`
+运行
+    `./sitl_gazebo_vtol.sh`
+
+    第三个终端选择0和1，第四个终端如果相应的位置或者速度，第五个终端输入4解锁，0切换offboard。
+
+
 
