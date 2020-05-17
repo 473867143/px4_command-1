@@ -51,7 +51,9 @@ Send command to PX4 using Mavros package
     home下打开.bashrc文件，添加如下格式的路径变量
 
     `source ~/$(your path)/Firmware/Tools/setup_gazebo.bash ~/$(your path)/Firmware ~/$(your path)/Firmware/build/px4_sitl_default`
+    
     `export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:~/$(your path)/Firmware`
+    
     `export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:~/$(your path)/Firmware/Tools/sitl_gazebo`
 
 # 仿真运行
