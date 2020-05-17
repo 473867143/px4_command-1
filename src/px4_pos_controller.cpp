@@ -360,39 +360,47 @@ int main(int argc, char **argv)
             vel_sp = Eigen::Vector3d(Command_Now.vel_sp[0],Command_Now.vel_sp[1],Command_Now.vel_sp[2]);
             yaw_sp = Command_Now.yaw_sp;
 
-            if(switch_ude == 0)
-            {
-                accel_sp = pos_controller_pid.pos_controller(pos_controller.pos_drone_fcu, pos_controller.vel_drone_fcu, pos_sp, vel_sp, Command_Now.sub_mode, dt);
-            }else if(switch_ude == 1)
-            {
-                accel_sp = pos_controller_ude.pos_controller(pos_controller.pos_drone_fcu, pos_controller.vel_drone_fcu, pos_sp, dt);
-            }else if(switch_ude == 2)
-            {
-                accel_sp = pos_controller_ps.pos_controller(pos_drone_mocap, pos_controller.vel_drone_fcu, pos_sp, dt);
-                //accel_sp = pos_controller_ps.pos_controller(pos_controller.pos_drone_fcu, pos_controller.vel_drone_fcu, pos_sp, dt);
-            }else if(switch_ude == 3)
-            {
-                accel_sp = pos_controller_ne.pos_controller(pos_drone_mocap, pos_controller.vel_drone_fcu, pos_sp, dt);
-                //accel_sp = pos_controller_ps.pos_controller(pos_controller.pos_drone_fcu, pos_controller.vel_drone_fcu, pos_sp, dt);
-            }
+            // 直接发送期望的速度或者是位置给到飞控
+            pos_controller.send_pos_setpoint(pos_sp,yaw_sp);
+            // pos_controller.send_vel_setpoint(vel_sp,yaw_sp);
 
-            if(flag_att_sp == 0)
-            {
-                pos_controller.send_accel_setpoint(accel_sp, yaw_sp);
-            }else
-            {
-                q_sp =  thrustToAttitude(accel_sp, yaw_sp);
+            // if(switch_ude == 0)
+            // {
+            //     accel_sp = pos_controller_pid.pos_controller(pos_controller.pos_drone_fcu, pos_controller.vel_drone_fcu, pos_sp, vel_sp, Command_Now.sub_mode, dt);
+            // }else if(switch_ude == 1)
+            // {
+            //     accel_sp = pos_controller_ude.pos_controller(pos_controller.pos_drone_fcu, pos_controller.vel_drone_fcu, pos_sp, dt);
+            // }else if(switch_ude == 2)
+            // {
+            //     accel_sp = pos_controller_ps.pos_controller(pos_drone_mocap, pos_controller.vel_drone_fcu, pos_sp, dt);
+            //     //accel_sp = pos_controller_ps.pos_controller(pos_controller.pos_drone_fcu, pos_controller.vel_drone_fcu, pos_sp, dt);
+            // }else if(switch_ude == 3)
+            // {
+            //     accel_sp = pos_controller_ne.pos_controller(pos_drone_mocap, pos_controller.vel_drone_fcu, pos_sp, dt);
+            //     //accel_sp = pos_controller_ps.pos_controller(pos_controller.pos_drone_fcu, pos_controller.vel_drone_fcu, pos_sp, dt);
+            // }
 
-                //att_sp =  quaternion_to_euler(q_sp);
+            // if(flag_att_sp == 0)
+            // {
+            //     // rostopic echo /mavr/setpoint_raw/local 
+            //     // 发送给飞控的是期望的加速度 2111
+            //     pos_controller.send_accel_setpoint(accel_sp, yaw_sp);
+            // }else
+            // {
+            //     q_sp =  thrustToAttitude(accel_sp, yaw_sp);
 
-                thrust_sp = accel_sp.norm();
+            //     //att_sp =  quaternion_to_euler(q_sp);
 
-                //cout << "thrust_sp: " << thrust_sp <<endl;
+            //     thrust_sp = accel_sp.norm();
 
-                //cout << "Attitude_sp0 [R P Y] : " << att_sp[0] * 180/M_PI <<" [deg] "<<att_sp[1] * 180/M_PI << " [deg] "<< att_sp[2] * 180/M_PI<<" [deg] "<<endl;
+            //     //cout << "thrust_sp: " << thrust_sp <<endl;
 
-                pos_controller.send_attitude_setpoint(q_sp, thrust_sp);
-            }
+            //     //cout << "Attitude_sp0 [R P Y] : " << att_sp[0] * 180/M_PI <<" [deg] "<<att_sp[1] * 180/M_PI << " [deg] "<< att_sp[2] * 180/M_PI<<" [deg] "<<endl;
+                
+            //     // rostopic echo /mavros/setpoint_raw/attitude
+            //     // 发送给飞控的是期望的
+            //     pos_controller.send_attitude_setpoint(q_sp, thrust_sp);
+            // }
 
 
             break;
