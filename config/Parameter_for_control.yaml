@@ -24,7 +24,7 @@ Limit:
 ## 起飞高度
 Takeoff_height : 0.8
 Disarm_height : 0.15
-flag_att_sp : 0
+flag_att_sp : 1
 # 位置环参数
 Pos_pid:
   Kp_xy : 0.95
